@@ -58,6 +58,9 @@ export default function Home() {
       case "auth/invalid-credential":
         setError("Invalid credentials. Please try again.");
         break;
+      case "auth/email-already-in-use":
+        setError("Email already in use. Please enter a different email");
+        break;
       default:
         setError("An error occurred. Please try again later.");
         break;
