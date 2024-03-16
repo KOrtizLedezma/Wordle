@@ -41,6 +41,16 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+.tittle-gradient-Logged-In {
+  font-size: 4rem;
+  background-image: linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  align-items: center;
+}
+
 .text-gradient {
   font-size: 2rem;
   background-image: linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99);
@@ -48,6 +58,18 @@ body {
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
+}
+
+.text-data-gradient {
+  margin-top: 1rem;
+  font-size: 1rem;
+  background-image: linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  margin-left: 1rem;
+  margin-right: 70rem;
 }
 
 .error-gradient {
@@ -66,6 +88,17 @@ body {
   background-image: linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99);
   color: white;
   margin-top: 1rem;
+  margin-left: 5rem;
+}
+
+.small-button {
+  padding: 0.25rem 0.5rem;
+  width: 80px;
+  border-radius: 9999px;
+  background-image: linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99);
+  color: white;
+  margin-top: 1rem;
+  margin-right: 1rem;
 }
 
 .button span {
@@ -73,6 +106,12 @@ body {
   border-radius: 9999px;
   padding: 0.5rem 1rem;
 }
+
+.small-button span {
+  display: block;
+  border-radius: 9999px;
+}
+
 
 .input-container {
   border: 2px solid transparent;
@@ -95,4 +134,111 @@ body {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   caret-color: black;
+}
+
+/* Fix Auto fill color, autofill is blocked*/
+.input-container input:-webkit-autofill {
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.data-and-button-container {
+  display: flex;
+  align-items: center;
+}
+
+main {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.wordle-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.wordle-row {
+  display: flex;
+}
+
+.wordle-cell {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  background-color: black;
+  margin-top: 2px;
+  margin-right: 2px;
+  background-image: linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+}
+
+.keyboard-first {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 5px;
+  padding: 1px;
+  background-color: black;
+  margin-top: 2rem;
+}
+
+.keyboard-second {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 5px;
+  padding: 1px;
+  background-color: black;
+  margin-top: 1px;
+}
+
+.keyboard-third {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(45px, max-content)); /* Adjust minmax values as needed */
+  gap: 5px;
+  padding: 1px;
+  background-color: black;
+  margin-top: 1px;
+}
+
+.key {
+  padding: 10px;
+  background-color: #555555;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  justify-content: center;
+  background-image: linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+  font-size: 24px;
+  width: 45px;
+  height: 65px;
+}
+
+.key-large {
+  padding: 10px;
+  background-color: #555555;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  justify-content: center;
+  background-image: linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+  font-size: 24px;
+  width: 67.5px;
 }
