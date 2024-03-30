@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
-const WordleBoard = ({ numRows, numCols, board }) => {
-  // Function to render the Wordle board
+const WordleBoard = ({ board, won, targetWord, gameOver }) => {
   const renderBoard = () => {
     return board.map((row, rowIndex) => (
       <div key={rowIndex} className="wordle-row">
@@ -17,6 +16,15 @@ const WordleBoard = ({ numRows, numCols, board }) => {
   return (
     <div className="wordle-board">
       {renderBoard()}
+      {gameOver && (
+        <div>
+          {won ? (
+                console.log("Congratulations! You won!")
+              ) : (
+                console.log("Game over. The word was {targetWord}.")
+              )}
+        </div>
+      )}
     </div>
   );
 };

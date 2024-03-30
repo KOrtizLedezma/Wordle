@@ -101,6 +101,16 @@ body {
   margin-right: 1rem;
 }
 
+.play-again-button {
+  padding: 0.25rem 0.5rem;
+  width: 100px;
+  border-radius: 9999px;
+  background-image: linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99);
+  color: white;
+  margin-top: 2rem;
+  margin-right: 1rem;
+}
+
 .button span {
   display: block;
   border-radius: 9999px;
@@ -108,6 +118,11 @@ body {
 }
 
 .small-button span {
+  display: block;
+  border-radius: 9999px;
+}
+
+.play-again-button span {
   display: block;
   border-radius: 9999px;
 }
@@ -133,7 +148,7 @@ body {
   background: linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99);
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  caret-color: black;
+  caret-color: #aa4b6b;
 }
 
 /* Fix Auto fill color, autofill is blocked*/
@@ -241,4 +256,32 @@ main {
   font-weight: bold;
   font-size: 24px;
   width: 67.5px;
+}
+
+#game-board {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.letter-box {
+  border: 2px solid gray;
+  border-radius: 3px;
+  margin: 2px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  height: 3rem;
+  width: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+.filled-box {
+  border: 2px solid black;
+}
+
+.letter-row {
+  display: flex;
 }

@@ -3,11 +3,19 @@ import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, addDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import dotenv from 'dotenv';
+dotenv.config();
+
+//Components
 import Header from "./Components/Header";
 import LoginForm from "./Components/LoginForm";
 import Tittle from "./Components/Tittle";
 import WordleBoard from "./Components/WordleBoard";
 import Keyboard from "./Components/Keyboard";
+
+// API KEYS
+const wordnikApiKey = process.env.REACT_APP_WORDNIK_API_KEY;
+const firebaseApiKey = process.env.REACT_APP_FIREBASE_API_KEY;
 
 // Firebase configuration
 const firebaseConfig = {
@@ -35,40 +43,42 @@ const db = getFirestore(app);
 console.log("Firestore initialized.");
 
 export default function Home() {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  //const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  const [board, setBoard] = useState([
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', '']
-  ]);
+
+  const [board, setBoard] = useState(Array(6).fill().map(() => Array(5).fill('')));
+  const [currentRow, setCurrentRow] = useState(0);
+  const [currentCol, setCurrentCol] = useState(0);
+  const [targetWord, setTargetWord] = useState('HONEY');
+  const [gameOver, setGameOver] = useState(false);
+  const [won, setWon] = useState(false);
+
+  //Wordnik
+  const axios = require('axios');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         fetchUserData(user.uid);
       } else {
-        setIsLoggedIn(false);
+        //setIsLoggedIn(false);
         setUser(null);
       }
     });
 
-    const handleKeyDown = (event) => {
-      handleKeyPress(event);
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
+    // Generate a new target word when the game starts
+    getRandomWordOfLength(5).then(word => {
+      setTargetWord(word);
+    });
 
     return () => {
       unsubscribe();
-      document.removeEventListener("keydown", handleKeyDown);
     };
+
   }, []);
 
   const fetchUserData = async (userId) => {
@@ -84,26 +94,14 @@ export default function Home() {
     }
   };
 
-  const changeBoard = async () => {
-    setBoard([
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', ''],
-      ['', '', '', '', '']
-    ]);
-  }
-
   const handleLoginClick = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       console.log("User logged in successfully!");
-      setIsLoggedIn(true);
+      //setIsLoggedIn(true);
     } catch (error) {
       console.error("Error signing in:", error);
       handleAuthError(error.code);
-      setIsLoggedIn(false);
     }
   };
 
@@ -111,7 +109,7 @@ export default function Home() {
     try {
       await signOut(auth);
       console.log("User logged out successfully!");
-      setIsLoggedIn(false);
+      //setIsLoggedIn(false);
       setEmail("");
       setPassword("");
     } catch (error) {
@@ -130,11 +128,11 @@ export default function Home() {
       });
 
       console.log("User registered successfully!");
-      setIsLoggedIn(true);
+      //setIsLoggedIn(true);
     } catch (error) {
       console.error("Error registering user:", error);
       handleAuthError(error.code);
-      setIsLoggedIn(false);
+      //setIsLoggedIn(false);
     }
   };
 
@@ -144,11 +142,16 @@ export default function Home() {
         setError("Invalid email format. Please enter a valid email.");
         break;
       case "auth/wrong-password":
+        setError("Invalid password. Please try again.");
+        break;
       case "auth/invalid-credential":
         setError("Invalid credentials. Please try again.");
         break;
       case "auth/email-already-in-use":
         setError("Email already in use. Please enter a different email.");
+        break;
+      case "(auth/weak-password)":
+        setError("Password should be at least 6 characters.");
         break;
       default:
         setError("An error occurred. Please try again later.");
@@ -156,102 +159,146 @@ export default function Home() {
     }
   };
 
-  const handleKeyPress = (event) => {
-    if (event && event.keyCode && event.type === 'keydown') {
-      const keyPressed = event.key.toUpperCase();
-      const isAlphabetic = /[A-Z]/.test(keyPressed);
-      const isBackspace = event.keyCode === 8;
-      const isEnter = event.keyCode === 13;
-      const isTabOrAlt = event.keyCode === 9 || event.keyCode === 18 || event.keyCode === 17 || event.keyCode === 16;
-  
-      let currentRow = board.findIndex(row => row.includes(''));
-      let canInputLetters = true;
-  
-      if (currentRow === -1) {
-        // All rows are filled, do not allow further input
-        canInputLetters = false;
+  const handleInput = (letter) => {
+    // Handle user input
+    if (currentCol < 5) {
+      const newBoard = [...board];
+      newBoard[currentRow][currentCol] = letter;
+      setBoard(newBoard);
+      setCurrentCol(currentCol + 1);
+    }
+  };
+
+  const handleBackspace = () => {
+    // Handle backspace
+    if (currentCol > 0) {
+      const newBoard = [...board];
+      newBoard[currentRow][currentCol - 1] = '';
+      setBoard(newBoard);
+      setCurrentCol(currentCol - 1);
+    }
+  };
+
+  const handleEnter = async () => {
+    // Handle enter key
+    if (currentCol === 5) {
+      const guess = board[currentRow].join('');
+      const isValid = await isValidWord(guess.toLowerCase());
+      if (isValid) {
+        checkWin(guess);
+        setCurrentRow(currentRow + 1);
+        setCurrentCol(0);
       } else {
-        // Find the first empty column in the current row
-        const currentCol = board[currentRow].indexOf('');
-  
-        // Check if the current row is already filled
-        const wordLength = board[currentRow].filter(cell => cell !== '').length;
-        if (wordLength === 5) {
-          canInputLetters = false;
-        }
-      }
-  
-      if (isAlphabetic && canInputLetters) {
-        const newBoard = [...board];
-        let currentCol = 0;
-  
-        currentCol = newBoard[currentRow].indexOf('');
-  
-        if (currentCol < 5) {
-          newBoard[currentRow][currentCol] = keyPressed;
-          setBoard(newBoard);
-  
-          // Check if the current row is now filled
-          const wordLength = newBoard[currentRow].filter(cell => cell !== '').length;
-          if (wordLength === 5) {
-            canInputLetters = false;
-          }
-        }
-      }
-  
-      // Handle backspace
-      if (isBackspace) {
-        const newBoard = [...board];
-        let currentCol = 0;
-  
-        currentCol = newBoard[currentRow].lastIndexOf('');
-        if (currentCol === -1) {
-          currentCol = 4;
-        } else {
-          currentCol--;
-        }
-  
-        if (currentCol >= 0) {
-          newBoard[currentRow][currentCol] = '';
-          setBoard(newBoard);
-          canInputLetters = true; // Allow letter input after backspace
-        }
-      }
-  
-      // Handle enter
-      if (isEnter) {
-        const newBoard = [...board];
-        const wordLength = newBoard[currentRow].filter(cell => cell !== '').length;
-        if (wordLength === 5) {
-          // Handle word submission logic here
-          // ...
-          const currentWord = newBoard[currentRow].join('');
-          console.log('Submitted word:', currentWord);
-          // Implement your word submission logic here
-          currentRow++;
-          canInputLetters = true; // Allow letter input after Enter
-        } else {
-          // Word is not complete, don't allow newline
-          event.preventDefault();
-        }
-      }
-  
-      if (!isAlphabetic && !isBackspace && !isEnter && !isTabOrAlt) {
-        event.preventDefault();
+        alert('Invalid word!');
       }
     }
   };
 
-  if (isLoggedIn) {
+  const isValidWord = async (word) => {
+    const apiKey = '7vks1oncnkh8yfhj275fj6f1imx7czk0tdozfn07h556lbwtx';
+    const apiUrl = `https://api.wordnik.com/v4/word.json/${word}/definitions?api_key=${apiKey}`;
+
+    try {
+        const response = await axios.get(apiUrl);
+        return response.status === 200 && response.data.length > 0;
+    } catch (error) {
+        console.error('Error:', error.message);
+        return false;
+    }
+};
+
+  const getRandomWordOfLength = async (length) => {
+    const apiKey = '7vks1oncnkh8yfhj275fj6f1imx7czk0tdozfn07h556lbwtx';
+    const apiUrl = `https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&minLength=${length}&maxLength=${length}&api_key=${apiKey}`;
+
+    try {
+      const response = await axios.get(apiUrl);
+      if (response.status === 200) {
+        console.log(response.data.word);
+        return response.data.word.toUpperCase();;
+      } else {
+        console.error('Error:', response.status);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error:', error.message);
+      return null;
+    }
+  };
+
+  const checkWin = (guess) => {
+    if (guess === targetWord) {
+      setWon(true);
+      setGameOver(true);
+      // Update user's score in Firestore
+      updateUserScore(user.score + 1);
+    } else if (currentRow === 5) {
+      setGameOver(true);
+    }
+  };
+
+  const updateUserScore = async () => {
+    try {
+      if (user) {
+        const userId = user.uid;
+        const userRef = doc(db, "users", userId);
+  
+        // Get the current score from the user document
+        const userDoc = await getDoc(userRef);
+        const currentScore = userDoc.data().score;
+  
+        // Calculate the new score by adding 10 to the current score
+        const newScore = currentScore + 10;
+  
+        // Update the user document with the new score
+        await setDoc(userRef, { score: newScore }, { merge: true });
+  
+        console.log("User score updated successfully!");
+      } else {
+        console.error("No user is currently logged in.");
+      }
+    } catch (error) {
+      console.error("Error updating user score:", error);
+    }
+  };
+  
+  const resetGame = () => {
+    setBoard(Array(6).fill().map(() => Array(5).fill('')));
+    setCurrentRow(0);
+    setCurrentCol(0);
+    getRandomWordOfLength(5).then(word => {setTargetWord(word)});
+    setGameOver(false);
+    setWon(false);
+  };
+
+  if (user) {
     return (
       <div>
         <main className="flex min-h-screen flex-col items-center bg-black">
           <Header email={user ? user.email : ""} score={user ? user.score : 0} handleLogOutClick={handleLogoutClick} />
           <Tittle />
           <div>
-            <WordleBoard numRows={6} numCols={5} board={board} />
+            <WordleBoard board={board} won={won} targetWord={targetWord} gameOver={gameOver} />
           </div>
-          <Keyboard />
+          <Keyboard
+            handleInput={handleInput}
+            handleBackspace={handleBackspace}
+            handleEnter={handleEnter}
+          />
+          {gameOver && (
+            <div>
+              {won ? (
+                console.log("Congratulations! You won!")
+              ) : (
+                console.log("Game over. The word was {targetWord}.")
+              )}
+
+              {won &&(
+                <button className="play-again-button" onClick={resetGame}>Play Again</button>
+              )}
+              
+            </div>
+          )}
         </main>
       </div>
     );
