@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, addDoc, doc, getDoc, setDoc } from "firebase/firestore";
-import dotenv from 'dotenv';
-dotenv.config();
 
 //Components
 import Header from "./Components/Header";
@@ -14,12 +12,13 @@ import WordleBoard from "./Components/WordleBoard";
 import Keyboard from "./Components/Keyboard";
 
 // API KEYS
-const wordnikApiKey = process.env.REACT_APP_WORDNIK_API_KEY;
 const firebaseApiKey = process.env.REACT_APP_FIREBASE_API_KEY;
+const wornikApiKey = process.env.REACT_APP_WORDNIK_API_KEY;
+console.log(firebaseApiKey);
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDTsNSIa2N4b0DAQPL84HDcg2QpAoz9k8w",
+  apiKey: 'AIzaSyDTsNSIa2N4b0DAQPL84HDcg2QpAoz9k8w',
   authDomain: "wordle-ae5fe.firebaseapp.com",
   projectId: "wordle-ae5fe",
   storageBucket: "wordle-ae5fe.appspot.com",
