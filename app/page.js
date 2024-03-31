@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, collection, addDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 //Components
 import Header from "./Components/Header";
@@ -11,19 +11,23 @@ import Tittle from "./Components/Tittle";
 import WordleBoard from "./Components/WordleBoard";
 import Keyboard from "./Components/Keyboard";
 
-// API KEYS
-const firebaseApiKey = process.env.REACT_APP_FIREBASE_API_KEY;
-const wornikApiKey = process.env.REACT_APP_WORDNIK_API_KEY;
-console.log(firebaseApiKey);
+// API KEYS & DATA
+const firebaseApiKey = process.env.NEXT_PUBLIC_REACT_APP_FIREBASE_API_KEY;
+const firebaseAuthDomain = process.env.NEXT_PUBLIC_REACT_APP_authDomain;
+const firebaseProjectID = process.env.NEXT_PUBLIC_REACT_APP_projectId;
+const firebaseStorageBucket = process.env.NEXT_PUBLIC_REACT_APP_storageBucket;
+const firebaseMessagingSenderId = process.env.NEXT_PUBLIC_REACT_APP_messagingSenderId;
+const firebaseAppId = process.env.NEXT_PUBLIC_REACT_APP_appId;
+const wordnikApiKey = process.env.NEXT_PUBLIC_REACT_APP_WORDNIK_API_KEY;
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyDTsNSIa2N4b0DAQPL84HDcg2QpAoz9k8w',
-  authDomain: "wordle-ae5fe.firebaseapp.com",
-  projectId: "wordle-ae5fe",
-  storageBucket: "wordle-ae5fe.appspot.com",
-  messagingSenderId: "809603437010",
-  appId: "1:809603437010:web:daae7949b1d064931d380b"
+  apiKey: firebaseApiKey,
+  authDomain: firebaseAuthDomain,
+  projectId: firebaseProjectID,
+  storageBucket: firebaseStorageBucket,
+  messagingSenderId: firebaseMessagingSenderId,
+  appId: firebaseAppId
 };
 
 // Initialize Firebase app
@@ -123,7 +127,8 @@ export default function Home() {
 
       await setDoc(doc(db, "users", user.uid), {
         email: user.email,
-        score: 0
+        score: 0,
+        uid: user.uid
       });
 
       console.log("User registered successfully!");
@@ -194,7 +199,7 @@ export default function Home() {
   };
 
   const isValidWord = async (word) => {
-    const apiKey = '7vks1oncnkh8yfhj275fj6f1imx7czk0tdozfn07h556lbwtx';
+    const apiKey = wordnikApiKey;
     const apiUrl = `https://api.wordnik.com/v4/word.json/${word}/definitions?api_key=${apiKey}`;
 
     try {
@@ -207,7 +212,7 @@ export default function Home() {
 };
 
   const getRandomWordOfLength = async (length) => {
-    const apiKey = '7vks1oncnkh8yfhj275fj6f1imx7czk0tdozfn07h556lbwtx';
+    const apiKey = wordnikApiKey;
     const apiUrl = `https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&minLength=${length}&maxLength=${length}&api_key=${apiKey}`;
 
     try {
@@ -237,11 +242,12 @@ export default function Home() {
   };
 
   const updateUserScore = async () => {
+    console.log("Here");
     try {
       if (user) {
         const userId = user.uid;
         const userRef = doc(db, "users", userId);
-  
+        
         // Get the current score from the user document
         const userDoc = await getDoc(userRef);
         const currentScore = userDoc.data().score;
