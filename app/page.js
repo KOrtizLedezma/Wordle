@@ -333,6 +333,10 @@ const getRandomWordOfLength = async (length) => {
               {won &&(
                 <button className="play-again-button" onClick={resetGame}>Play Again</button>
               )}
+
+              {!won &&(
+                <button className="play-again-button" onClick={resetGame}>Play Again</button>
+              )}
               
             </div>
           )}
