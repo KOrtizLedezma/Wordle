@@ -60,6 +60,9 @@ export default function Home() {
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
 
+  //Keyboard States array
+  const [states, setStates] = useState(Array(6).fill().map(() => Array(5).fill('#121212')));
+
   //Wordnik
   const axios = require('axios');
 
@@ -77,6 +80,9 @@ export default function Home() {
     getRandomWordOfLength(5).then(word => {
       setTargetWord(word);
     });
+
+    //Look for React equivalent of watch vue.js
+    
 
     return () => {
       unsubscribe();
@@ -189,6 +195,7 @@ export default function Home() {
       const guess = board[currentRow].join('');
       const isValid = await isValidWord(guess.toLowerCase());
       if (isValid) {
+        checkIfCorrectLetter(guess);
         checkWin(guess);
         setCurrentRow(currentRow + 1);
         setCurrentCol(0);
@@ -197,6 +204,23 @@ export default function Home() {
       }
     }
   };
+
+  const checkIfCorrectLetter = (guess) => {
+    let correct = targetWord.toUpperCase();
+    let newStates = [...states];
+    for (let i = 0 ; i < 5 ; i++) {
+      if (correct.includes(guess[i])) {
+        if (guess[i] === correct[i]) {
+          newStates[currentRow][i] = '#538d4e'; //Green
+        } else {
+          if(correct.includes(guess[i])){
+            newStates[currentRow][i] = '#f7da21'; //Yellow
+          }
+        }
+      } 
+    }
+    setStates(newStates);
+  }
 
   const isValidWord = async (word) => {
     const apiKey = wordnikApiKey;
@@ -211,24 +235,33 @@ export default function Home() {
     }
 };
 
-  const getRandomWordOfLength = async (length) => {
-    const apiKey = wordnikApiKey;
-    const apiUrl = `https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&minLength=${length}&maxLength=${length}&api_key=${apiKey}`;
+const getRandomWordOfLength = async (length) => {
+  const apiKey = wordnikApiKey;
+  const apiUrl = `https://api.wordnik.com/v4/words.json/randomWord?hasDictionaryDef=true&minLength=${length}&maxLength=${length}&api_key=${apiKey}`;
 
-    try {
+  try {
       const response = await axios.get(apiUrl);
       if (response.status === 200) {
-        console.log(response.data.word);
-        return response.data.word.toUpperCase();;
+          const word = response.data.word;
+          if (/^[a-z]+$/.test(word)) { // Check if word is fully lowercase
+            console.log(word)
+            return word.toUpperCase();
+          } else if (/^[A-Z]+$/.test(word)) { // Check if word is fully uppercase
+            console.log(word)  
+            return word; 
+          } else {
+              return getRandomWordOfLength(length);
+          }
       } else {
-        console.error('Error:', response.status);
-        return null;
+          console.error('Error:', response.status);
+          return null;
       }
-    } catch (error) {
+  } catch (error) {
       console.error('Error:', error.message);
       return null;
-    }
-  };
+  }
+};
+
 
   const checkWin = (guess) => {
     if (guess === targetWord) {
@@ -242,12 +275,11 @@ export default function Home() {
   };
 
   const updateUserScore = async () => {
-    console.log("Here");
     try {
       if (user) {
         const userId = user.uid;
         const userRef = doc(db, "users", userId);
-        
+
         // Get the current score from the user document
         const userDoc = await getDoc(userRef);
         const currentScore = userDoc.data().score;
@@ -257,6 +289,11 @@ export default function Home() {
   
         // Update the user document with the new score
         await setDoc(userRef, { score: newScore }, { merge: true });
+
+        setUser(prevUser => ({
+          ...prevUser,
+          score: newScore
+        }));
   
         console.log("User score updated successfully!");
       } else {
@@ -269,6 +306,7 @@ export default function Home() {
   
   const resetGame = () => {
     setBoard(Array(6).fill().map(() => Array(5).fill('')));
+    setStates(Array(6).fill().map(() => Array(5).fill('#121212')))
     setCurrentRow(0);
     setCurrentCol(0);
     getRandomWordOfLength(5).then(word => {setTargetWord(word)});
@@ -279,11 +317,11 @@ export default function Home() {
   if (user) {
     return (
       <div>
-        <main className="flex min-h-screen flex-col items-center bg-black">
+        <main className="flex min-h-screen flex-col items-center" style={{ backgroundColor: '#121212'}}>
           <Header email={user ? user.email : ""} score={user ? user.score : 0} handleLogOutClick={handleLogoutClick} />
           <Tittle />
           <div>
-            <WordleBoard board={board} won={won} targetWord={targetWord} gameOver={gameOver} />
+            <WordleBoard board={board} states={states} won={won} targetWord={targetWord} gameOver={gameOver} />
           </div>
           <Keyboard
             handleInput={handleInput}
@@ -292,12 +330,6 @@ export default function Home() {
           />
           {gameOver && (
             <div>
-              {won ? (
-                console.log("Congratulations! You won!")
-              ) : (
-                console.log("Game over. The word was {targetWord}.")
-              )}
-
               {won &&(
                 <button className="play-again-button" onClick={resetGame}>Play Again</button>
               )}
@@ -309,7 +341,7 @@ export default function Home() {
     );
   } else {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-black">
+      <main className="flex min-h-screen flex-col items-center justify-between p-24 "style={{ backgroundColor: '#121212'}}>
         <LoginForm
           email={email}
           setEmail={setEmail}

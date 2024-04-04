@@ -174,6 +174,7 @@ main {
   flex-direction: column;
   align-items: center;
   margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 .wordle-row {
@@ -183,27 +184,25 @@ main {
 .wordle-cell {
   width: 50px;
   height: 50px;
-  border: 1px solid #ccc;
+  border: 2px solid #d3d6da;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 25px;
-  background-color: black;
   margin-top: 2px;
   margin-right: 2px;
-  background-image: linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background-image: none;
+  background-color: #121212;
   font-weight: bold;
 }
+
 
 .keyboard-first {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   gap: 5px;
   padding: 1px;
-  background-color: black;
+  background-color: #121212;
   margin-top: 2rem;
 }
 
@@ -212,7 +211,7 @@ main {
   grid-template-columns: repeat(9, 1fr);
   gap: 5px;
   padding: 1px;
-  background-color: black;
+  background-color: #121212;
   margin-top: 1px;
 }
 
@@ -221,13 +220,13 @@ main {
   grid-template-columns: repeat(9, minmax(45px, max-content)); /* Adjust minmax values as needed */
   gap: 5px;
   padding: 1px;
-  background-color: black;
+  background-color: #121212;
   margin-top: 1px;
 }
 
 .key {
   padding: 10px;
-  background-color: #555555;
+  background-color: #121212;
   border: 1px solid #ccc;
   border-radius: 5px;
   text-align: center;
@@ -244,7 +243,7 @@ main {
 
 .key-large {
   padding: 10px;
-  background-color: #555555;
+  background-color: #121212;
   border: 1px solid #ccc;
   border-radius: 5px;
   text-align: center;
@@ -256,32 +255,4 @@ main {
   font-weight: bold;
   font-size: 24px;
   width: 67.5px;
-}
-
-#game-board {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
-
-.letter-box {
-  border: 2px solid gray;
-  border-radius: 3px;
-  margin: 2px;
-  font-size: 2.5rem;
-  font-weight: 700;
-  height: 3rem;
-  width: 3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-transform: uppercase;
-}
-
-.filled-box {
-  border: 2px solid black;
-}
-
-.letter-row {
-  display: flex;
 }
