@@ -27,3 +27,8 @@ This is a Wordle game project developed in JavaScript using Node.js. The game al
 - Firebase: [Firebase Documentation](https://firebase.google.com/docs)
 - Wordnik API: [Wordnik API Documentation](https://developer.wordnik.com/)
 - Next.js: [Next.js deployment documentation](https://nextjs.org/docs/deployment)
+- Vercel: [Vercel documentation](https://vercel.com/docs)
+
+## Link
+
+- [Check the project](https://wordledesktop.vercel.app/)
