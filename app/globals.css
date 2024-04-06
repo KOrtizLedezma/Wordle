@@ -224,17 +224,7 @@ main {
   margin-top: 1px;
 }
 
-
-/* .wordle-board {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-} */
-
 .key {
-  display: flex;
   padding: 10px;
   background-color: #121212;
   border: 1px solid #ccc;
@@ -248,7 +238,9 @@ main {
   font-weight: bold;
   font-size: 24px;
   width: 45px;
+  min-width: 30;
   height: 65px;
+  min-height: 50;
 }
 
 .key-large {
