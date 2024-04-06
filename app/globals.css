@@ -14,7 +14,17 @@
     width: 30px; /* Smaller width for phones */
     height: 50px; /* Smaller height for phones */
   }
+
+  .key-large {
+    width: 55px; /* Smaller width for phones */
+    height: 50px; /* Smaller height for phones */
+  }
 }
+
+@media only screen 
+  and (width: 393px)
+  and (height: 932px)
+  and (-webkit-device-pixel-ratio: 4){}
 
 @media (prefers-color-scheme: dark) {
   :root {
