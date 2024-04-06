@@ -6,11 +6,6 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-
-  /* Keys */
-  --key-width-large: 67.5px;
-  --key-width-normal: 45px;
-  --key-height: 65px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,43 +14,6 @@
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
-
-@media screen and (max-width: 768px) {
-  :root {
-    /* Adjust sizes for smaller screens */
-    --key-width-large: 50px; /* Smaller large key width */
-    --key-width-normal: 40px; /* Smaller key width */
-    --key-height: 55px; /* Smaller key height */
-  }
-
-  /* Adjust font sizes for smaller screens */
-  .key, .key-large {
-    font-size: 20px;
-  }
-
-  .tittle-gradient, .tittle-gradient-Logged-In, .text-gradient, .text-data-gradient {
-    font-size: smaller; /* Adjust title and text sizes */
-  }
-}
-
-/* Keyboard layout adjustments */
-.keyboard-first, .keyboard-second, .keyboard-third {
-  gap: 3px; /* Smaller gap between keys for smaller screens */
-}
-
-.key, .key-large {
-  width: var(--key-width-normal); /* Apply variable width */
-  height: var(--key-height); /* Apply variable height */
-}
-
-.key-large {
-  width: var(--key-width-large); /* Apply variable width for large keys */
-}
-
-/* Responsive adjustments for the third row to accommodate backspace and enter keys properly */
-.keyboard-third {
-  grid-template-columns: auto repeat(7, var(--key-width-normal)) auto; /* Adjust grid layout */
 }
 
 body {
@@ -279,8 +237,12 @@ main {
   -webkit-text-fill-color: transparent;
   font-weight: bold;
   font-size: 24px;
-  width: 45px;
-  height: 65px;
+  width : 100%;
+  max-width: 45px;
+  max-height: 65px;
+  min-width: 30px;
+  min-height: 50px;
+  
 }
 
 .key-large {
