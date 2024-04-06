@@ -8,24 +8,6 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (max-width: 393px) {
-  /* Styles for screens smaller than 600px (phones) */
-  .key {
-    width: 30px; /* Smaller width for phones */
-    height: 50px; /* Smaller height for phones */
-  }
-
-  .key-large {
-    width: 55px; /* Smaller width for phones */
-    height: 50px; /* Smaller height for phones */
-  }
-}
-
-@media only screen 
-  and (width: 393px)
-  and (height: 932px)
-  and (-webkit-device-pixel-ratio: 4){}
-
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -242,7 +224,17 @@ main {
   margin-top: 1px;
 }
 
+
+/* .wordle-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+} */
+
 .key {
+  display: flex;
   padding: 10px;
   background-color: #121212;
   border: 1px solid #ccc;
