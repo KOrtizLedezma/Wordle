@@ -8,7 +8,7 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 393px) {
   /* Styles for screens smaller than 600px (phones) */
   .key {
     width: 30px; /* Smaller width for phones */
