@@ -8,6 +8,14 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+@media (max-width: 600px) {
+  /* Styles for screens smaller than 600px (phones) */
+  .key {
+    width: 30px; /* Smaller width for phones */
+    height: 50px; /* Smaller height for phones */
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -237,12 +245,8 @@ main {
   -webkit-text-fill-color: transparent;
   font-weight: bold;
   font-size: 24px;
-  width : 100%;
-  max-width: 45px;
-  max-height: 65px;
-  min-width: 30px;
-  min-height: 50px;
-  
+  width: 45px;
+  height: 65px;
 }
 
 .key-large {
