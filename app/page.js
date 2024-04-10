@@ -313,6 +313,7 @@ const getRandomWordOfLength = async (length) => {
     getRandomWordOfLength(5).then(word => {setTargetWord(word)});
     setGameOver(false);
     setWon(false);
+    console.log("Game reseted");
   };
 
   if (user) {
