@@ -121,6 +121,7 @@ export default function Home() {
       //setIsLoggedIn(false);
       setEmail("");
       setPassword("");
+      resetGame();
     } catch (error) {
       console.error("Error logging out:", error);
     }
