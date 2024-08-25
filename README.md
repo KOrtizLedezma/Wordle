@@ -1,34 +1,49 @@
-## Wordle Game Project
+# Wordle Game Project
 
-## Overview
+Welcome to the Wordle game project! This project is a dynamic and interactive word puzzle game inspired by the popular Wordle game. It features user authentication, word validation using the Wordnik API, and real-time game state updates.
 
-This is a Wordle game project developed in JavaScript using Node.js. The game allows users to guess a target word within a limited number of attempts. It utilizes Firebase for user authentication and score saving, and it integrates the Wordnik API to fetch random words and verify input words.
+## 🚀 Features
 
-## Features
+- **User Authentication**: Sign up, log in, and manage sessions with Firebase Authentication.
+- **Dynamic Word Generation**: Randomly generated words using the Wordnik API for each new game.
+- **Real-Time Game Updates**: Instant feedback on each guess with color-coded hints.
+- **Score Tracking**: Track and update user scores with Firestore.
+- **Responsive Design**: Mobile and desktop-friendly interface.
 
-- User authentication with Firebase.
-- Saving user scores in Firestore.
-- Generating random words using the Wordnik API.
-- Checking if input words exist using the Wordnik API.
-- Interactive gameplay interface.
+## 🛠️ Technologies Used
 
-## Gameplay
+- **Frontend**: React, Next.js
+- **Authentication**: Firebase Authentication
+- **Database**: Firestore (Firebase)
+- **API Integration**: Wordnik API for word validation and generation
+- **State Management**: React Hooks
+- **Styling**: Tailwind CSS
 
-- Upon launching the application, users will be prompted to log in or register.
-- After logging in, users can start playing the Wordle game.
-- The game will present users with a target word to guess.
-- Users can input words and submit their guesses.
-- The game will indicate whether the guess is correct or not.
-- Users have a limited number of attempts to guess the word.
-- After completing the game, users can play again.
+## 🌐 Live Demo
 
-## Credits
+Check out the live demo [here](https://wordledesktop.vercel.app/).
 
-- Firebase: [Firebase Documentation](https://firebase.google.com/docs)
-- Wordnik API: [Wordnik API Documentation](https://developer.wordnik.com/)
-- Next.js: [Next.js deployment documentation](https://nextjs.org/docs/deployment)
-- Vercel: [Vercel documentation](https://vercel.com/docs)
+## 📚 How to Play
 
-## Link
+1. Start by logging in or registering with your email.
+2. Guess the 5-letter word within 6 attempts.
+3. Use the virtual keyboard to input letters and get feedback on your guesses:
+   - **Green**: Correct letter in the correct spot.
+   - **Yellow**: Correct letter but in the wrong spot.
+   - **Grey**: Incorrect letter.
+4. Your score is updated based on your performance, and you can play again after each round.
 
-- [Check the project](https://wordledesktop.vercel.app/)
+## 📧 Contact Me
+
+Feel free to reach out or contribute to this project through:
+
+- **GitHub**: [Kenet Ortiz](https://github.com/KOrtizLedezma)
+- **LinkedIn**: [Kenet Ortiz](https://www.linkedin.com/in/kenet-ortiz-ledezma-67a4a421b/)
+
+## 🛠️ Deployment
+
+This project is deployed using [Vercel](https://vercel.com/).
+
+---
+
+Enjoy playing Wordle and feel free to fork or contribute to the project!
